@@ -6,59 +6,79 @@
 <title>产能公报 · student.ipv64.de</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+body { background:#f7f8fa; color:#111827; padding:0 20px 40px;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   -webkit-font-smoothing:antialiased; }
-.sheet { max-width:720px; margin:0 auto; }
-.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.wrap { max-width:1024px; margin:0 auto; }
 .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
-.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
-.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
-.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
-.rule-double { border-top:3.5px solid #1d1a13; }
-.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
-.headline { padding:34px 0 4px; }
-h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
-.lede { margin-top:10px; color:#57523f; font-size:14.5px; }
-.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
-  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
-.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
-.prow { padding:16px 2px 14px; border-bottom:1px solid #ddd3bc; }
+.topnav { display:flex; gap:4px; padding:14px 0 2px; }
+.topnav a { font-size:13px; color:#6b7280; text-decoration:none; padding:6px 12px; border-radius:8px; }
+.topnav a:hover { color:#111827; background:#eef0f3; }
+.topnav a.active { color:#2563eb; font-weight:600; background:#eff6ff; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding:22px 0 4px; }
+.mast-l { font-size:24px; font-weight:700; }
+.mast-r { font-size:12px; color:#6b7280; text-align:right; line-height:1.7; }
+.hero { margin-top:16px; }
+.hero h1 { font-size:28px; font-weight:700; }
+.hero p { margin-top:8px; color:#4b5563; font-size:14px; line-height:1.7; }
+.hero p a { color:#2563eb; }
+.sec { margin:32px 0 12px; font-size:12px; font-weight:600; letter-spacing:.08em; color:#6b7280; }
+.card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 1px 2px rgba(16,24,40,.04); }
+.prow { padding:18px 22px; }
+.prow + .prow { border-top:1px solid #eef0f3; }
 .prow .top { display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
-.p-name { font-size:20px; font-weight:700; }
-.p-sub { font-size:12.5px; color:#6f6a5c; font-weight:400; margin-left:9px; letter-spacing:.04em; }
+.p-name { font-size:16px; font-weight:600; }
+.p-sub { font-size:13px; color:#6b7280; font-weight:400; margin-left:8px; }
 .p-num { font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
-.p-num small { font-size:12.5px; color:#6f6a5c; font-weight:400; }
-.meter { height:5px; background:#e3dbc7; margin-top:11px; position:relative; }
-.meter i { position:absolute; top:0; bottom:0; left:0; background:#1d1a13; display:block; }
-.p-detail { margin-top:9px; font-size:12.5px; color:#57523f; line-height:1.75; }
-.p-detail .warn { color:#bc3f16; font-weight:600; }
-.chk { display:grid; grid-template-columns:repeat(3,1fr); gap:8px 18px; margin-top:10px; }
-.chk div { font-size:13px; display:flex; justify-content:space-between; border-bottom:1px dotted #cfc5a9; padding:4px 0; }
+.p-num small { font-size:12px; color:#6b7280; font-weight:400; }
+.bar { height:6px; background:#e5e7eb; border-radius:999px; margin-top:12px; overflow:hidden; }
+.bar i { display:block; height:100%; background:#2563eb; border-radius:999px; }
+.p-detail { margin-top:9px; font-size:13px; color:#4b5563; line-height:1.7; }
+.p-detail .warn { color:#b45309; font-weight:600; }
+.chk { display:grid; grid-template-columns:repeat(3,1fr); gap:8px 18px; margin-top:12px; }
+.chk div { font-size:13px; display:flex; justify-content:space-between; border-bottom:1px solid #eef0f3; padding:5px 0; }
 .chk b { font-weight:600; }
-.ok { color:#3d6b35; } .bad { color:#bc3f16; }
-footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
-  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
-footer a { color:#57523f; }
-@media (max-width:560px) { h1.big { font-size:30px; } .chk { grid-template-columns:repeat(2,1fr); } .mast-l { font-size:24px; } }
+.ok { color:#15803d; } .bad { color:#b91c1c; }
+.pill { display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:600; white-space:nowrap; }
+.pill.ok { background:#dcfce7; color:#15803d; }
+.pill.muted { background:#f3f4f6; color:#4b5563; }
+.prog { padding:4px 22px 16px; }
+.prog-item { padding:14px 0; border-top:1px solid #eef0f3; }
+.prog-item:first-child { border-top:none; }
+.prog-top { display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
+.prog-name { font-size:15px; font-weight:600; }
+.prog-num { font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.prog-num small { font-size:12px; color:#6b7280; font-weight:400; }
+.prog-detail { margin-top:6px; font-size:13px; color:#4b5563; }
+.prog-group { margin-top:18px; font-size:13px; font-weight:600; color:#374151; }
+.prog-group:first-child { margin-top:10px; }
+.prog-done { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:11px 0; border-top:1px solid #eef0f3; font-size:14px; }
+.prog-done > span:last-child { color:#6b7280; font-size:13px; white-space:nowrap; }
+.prog-done .pill { margin-right:8px; }
+footer { margin-top:36px; padding-top:14px; border-top:1px solid #e5e7eb;
+  font-size:12px; color:#9ca3af; display:flex; justify-content:space-between; }
+footer a { color:#6b7280; }
+@media (max-width:640px) { .hero h1 { font-size:23px; } .mast-l { font-size:20px; } .chk { grid-template-columns:repeat(2,1fr); } .prow { padding:16px; } }
 </style>
 </head>
 <body>
-<div class="sheet">
+<div class="wrap">
+  <nav class="topnav"><a href="https://doctor.ipv64.de">服务状态</a><a href="https://student.ipv64.de" class="active">产能看板</a><a href="https://teacher.ipv64.de">文档公报</a></nav>
   <header class="mast">
-    <div class="mast-l serif">产能公报</div>
+    <div class="mast-l">产能公报</div>
     <div class="mast-r mono">STUDENT.IPV64.DE<br>2026年11月24日 · 星期二</div>
   </header>
-  <div class="rule-double"></div>
-  <section class="headline">
-    <h1 class="big serif">各线进展，一页看全</h1>
-    <p class="lede">视频、博客、备份、演练、模型与利率——所有自动化流水线的最新状态汇于此页，每日更新。站点存活看 <a href="https://doctor.ipv64.de" style="color:#bc3f16">服务公报</a>。</p>
+  <section class="hero">
+    <h1>各线进展，一页看全</h1>
+    <p>视频、博客、备份、演练、模型与利率——所有自动化流水线的最新状态汇于此页，每日更新。站点存活看 <a href="https://doctor.ipv64.de">服务状态</a>。</p>
   </section>
-  <h2 class="sec">生产线<span class="sec-r mono">PIPELINES</span></h2>
-  <div class="prow"><div class="top"><div class="p-name serif">教程视频<span class="p-sub">YouTube · @Agricalc</span></div><div class="p-num serif">55 <small>/ 134 已上传</small></div></div><div class="meter"><i style="width:41%"></i></div><div class="p-detail">制作 134/134 全部完成。<span class="warn">上传暂停中 · 等 client_secret 到手后补传余下 79 个</span></div></div><div class="prow"><div class="top"><div class="p-name serif">长尾博客<span class="p-sub">PlayVizo</span></div><div class="p-num serif">48 <small>/ 50 篇</small></div></div><div class="meter"><i style="width:96%"></i></div><div class="p-detail">站内博客共 138 篇。下一批 11 月 26 日：最后 2 篇（2027 提前布局）。每周一、四各发 3 篇。</div></div><div class="prow"><div class="top"><div class="p-name serif">异地备份<span class="p-sub">Cloudflare R2</span></div><div class="p-num serif">每周 <small>自动</small></div></div><div class="p-detail">最近一次验证通过：2026-11-23 16:32:34。每周日 04:15 运行，保留最近四代，单代约 267 MB。</div></div><div class="prow"><div class="top"><div class="p-name serif">免费模型扫描<span class="p-sub">OpenRouter · Pi</span></div><div class="p-num serif">15 <small>个免费模型</small></div></div><div class="p-detail">默认模型 nvidia/nemotron-3-ultra-550b:free。上次扫描 2026-11-23 23:56 UTC，每日 08:00 自动复扫，名单有变才通报。</div></div><div class="prow"><div class="top"><div class="p-name serif">贷款利率月检<span class="p-sub">Agricalc · FSA</span></div><div class="p-num serif">每月 <small>自动</small></div></div><div class="p-detail">现行 Operating 贷款利率 5.625%（11 月已更新）。下次月检 12 月 1 日 09:15，有变化自动更新页面并部署。</div></div>
-  <h2 class="sec">恢复演练<span class="sec-r mono">RESTORE DRILL</span></h2>
-  <div class="prow"><div class="top"><div class="p-name serif">恢复演练<span class="p-sub">每月一次 · 隔离环境</span></div><div class="p-num serif">2026-11-23</div></div><div class="chk"><div><span>下载</span><b class="ok">通过</b></div><div><span>文件齐全</span><b class="ok">通过</b></div><div><span>Agricalc 解包</span><b class="ok">通过</b></div><div><span>PlayVizo 解包</span><b class="ok">通过</b></div><div><span>数据库导入</span><b class="ok">通过</b></div><div><span>配置文件</span><b class="ok">通过</b></div></div><div class="p-detail">结论：<span class="ok">全部通过</span>。演练对象为 2026-11-23 那一代备份：Agricalc 解出 1377 个文件，PlayVizo 15708 个文件，数据库导入 24 张表、138 篇博客，用时 72 秒。演练库用完即删，不碰生产数据。下次演练 12 月 1 日。</div></div>
-  <footer class="mono"><span>STUDENT.IPV64.DE</span><span>每日刊印一次 · 本期 2026-11-24 01:05:50</span></footer>
+  <div class="sec">生产线</div>
+  <div class="card"><div class="prow"><div class="top"><div class="p-name">教程视频<span class="p-sub">YouTube · @Agricalc</span></div><div class="p-num">55 <small>/ 134 已上传</small></div></div><div class="bar"><i style="width:41%"></i></div><div class="p-detail">制作 134/134 全部完成。<span class="warn">上传暂停中 · 等 client_secret 到手后补传余下 79 个</span></div></div><div class="prow"><div class="top"><div class="p-name">长尾博客<span class="p-sub">PlayVizo</span></div><div class="p-num">48 <small>/ 50 篇</small></div></div><div class="bar"><i style="width:96%"></i></div><div class="p-detail">站内博客共 138 篇。下一批 11 月 26 日：最后 2 篇（2027 提前布局）。每周一、四各发 3 篇。</div></div><div class="prow"><div class="top"><div class="p-name">异地备份<span class="p-sub">Cloudflare R2</span></div><div class="p-num">每周 <small>自动</small></div></div><div class="p-detail">最近一次验证通过：2026-11-23 16:32:34。每周日 04:15 运行，保留最近四代，单代约 267 MB。</div></div><div class="prow"><div class="top"><div class="p-name">免费模型扫描<span class="p-sub">OpenRouter · Pi</span></div><div class="p-num">15 <small>个免费模型</small></div></div><div class="p-detail">默认模型 nvidia/nemotron-3-ultra-550b:free。上次扫描 2026-11-23 23:56 UTC，每日 08:00 自动复扫，名单有变才通报。</div></div><div class="prow"><div class="top"><div class="p-name">贷款利率月检<span class="p-sub">Agricalc · FSA</span></div><div class="p-num">每月 <small>自动</small></div></div><div class="p-detail">现行 Operating 贷款利率 5.625%（11 月已更新）。下次月检 12 月 1 日 09:15，有变化自动更新页面并部署。</div></div></div>
+  <div class="sec">任务进度</div>
+  <div class="card"><div class="prog"><div class="prog-group">进行中</div><div class="prog-item"><div class="prog-top"><div class="prog-name">Agricalc 教程视频</div><div class="prog-num">55 <small>/ 134</small> <small>· 41%</small></div></div><div class="bar"><i style="width:41%"></i></div><div class="prog-detail">已暂停，等 client_secret 补传</div></div><div class="prog-item"><div class="prog-top"><div class="prog-name">PlayVizo 长尾博客</div><div class="prog-num">48 <small>/ 50</small> <small>· 96%</small></div></div><div class="bar"><i style="width:96%"></i></div><div class="prog-detail">#49–#50 定于 11-26 发布</div></div><div class="prog-item"><div class="prog-top"><div class="prog-name">R2 异地备份</div><div class="prog-num"><span class="pill muted">进行中</span></div></div><div class="prog-detail">每周日 04:15 · 最新一代 2026-11-23，约 267 MB</div></div><div class="prog-item"><div class="prog-top"><div class="prog-name">免费模型扫描</div><div class="prog-num"><span class="pill muted">进行中</span></div></div><div class="prog-detail">每日 08:00 · 在榜 14 个</div></div><div class="prog-group">已完成</div><div class="prog-done"><span><span class="pill ok">已完成</span>三站迁 Cloady</span><span>2026-11-24</span></div><div class="prog-done"><span><span class="pill ok">已完成</span>R2 备份上线</span><span>2026-11-23</span></div><div class="prog-done"><span><span class="pill ok">已完成</span>恢复演练首期六项全过</span><span>2026-11-23，72 秒</span></div><div class="prog-done"><span><span class="pill ok">已完成</span>SaaSHub 获批上线</span><span>2026-11-20</span></div><div class="prog-group">即将到来</div><div class="prog-done"><span><span class="pill muted">即将到来</span>PlayVizo #49–#50 发布</span><span>11-26 09:15</span></div><div class="prog-done"><span><span class="pill muted">即将到来</span>FSA 贷款利率月检</span><span>12-01</span></div><div class="prog-done"><span><span class="pill muted">即将到来</span>恢复演练月度演练</span><span>12-01 05:30</span></div></div></div>
+  <div class="sec">恢复演练</div>
+  <div class="card"><div class="prow"><div class="top"><div class="p-name">恢复演练<span class="p-sub">每月一次 · 隔离环境</span></div><div class="p-num">2026-11-23</div></div><div class="chk"><div><span>下载</span><b class="ok">通过</b></div><div><span>文件齐全</span><b class="ok">通过</b></div><div><span>Agricalc 解包</span><b class="ok">通过</b></div><div><span>PlayVizo 解包</span><b class="ok">通过</b></div><div><span>数据库导入</span><b class="ok">通过</b></div><div><span>配置文件</span><b class="ok">通过</b></div></div><div class="p-detail">结论：<span class="ok">全部通过</span>。演练对象为 2026-11-23 那一代备份：Agricalc 解出 1377 个文件，PlayVizo 15708 个文件，数据库导入 24 张表、138 篇博客，用时 72 秒。演练库用完即删，不碰生产数据。下次演练 12 月 1 日。</div></div></div>
+  <footer class="mono"><span>ipv64-sites · Cloady</span><span>每日更新一次 · 本期 2026-11-24 13:21:58</span></footer>
 </div>
 </body>
 </html>

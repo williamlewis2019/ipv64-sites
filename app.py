@@ -10,13 +10,14 @@ by Host header:
   refreshed daily by pushing a new copy to the Git repo);
   teacher.ipv64.de -> static/teacher/*.html (document archive, static).
 
-Design: broadsheet / gazette style — warm paper, ink black, serif display
-type, hairline rules, one vermillion accent (the seal stamp). No gradients,
-no glow, no animation.
+Design: restrained big-company dashboard — light gray background, white
+cards, one blue accent (#2563eb), pill status labels, thin progress bars.
+No gradients, no glow, no animation.
 """
 import hashlib
 import hmac
 import html
+import json
 import os
 import threading
 import time
@@ -39,56 +40,63 @@ WEEKDAYS = "一二三四五六日"
 
 CSS = """
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+body { background:#f7f8fa; color:#111827; padding:0 20px 40px;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   -webkit-font-smoothing:antialiased; }
-.sheet { max-width:720px; margin:0 auto; }
-.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.wrap { max-width:1024px; margin:0 auto; }
 .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
-.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
-.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
-.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
-.rule-double { border-top:3.5px solid #1d1a13; }
-.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
-.headline { padding:36px 0 6px; position:relative; }
-.stamp { position:absolute; right:4px; top:34px; width:54px; height:54px; background:#bc3f16; color:#fdf6ec;
-  display:flex; align-items:center; justify-content:center; font-size:27px; font-weight:700;
-  transform:rotate(-4deg); border-radius:3px; opacity:.94; }
-h1.big { font-size:54px; font-weight:700; letter-spacing:.03em; line-height:1.15; }
-.lede { margin-top:12px; color:#57523f; font-size:15px; }
-.sec { display:flex; justify-content:space-between; align-items:baseline; margin:36px 0 2px;
-  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
-.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
-.row { display:flex; justify-content:space-between; align-items:center; gap:16px;
-  padding:16px 2px; border-bottom:1px solid #ddd3bc; }
-.r-name { font-size:21px; font-weight:700; }
-.r-sub { font-size:13px; color:#6f6a5c; font-weight:400; margin-left:9px; letter-spacing:.05em; }
-.r-url { font-size:11px; color:#8a8471; margin-top:4px; letter-spacing:.04em; }
+.topnav { display:flex; gap:4px; padding:14px 0 2px; }
+.topnav a { font-size:13px; color:#6b7280; text-decoration:none; padding:6px 12px; border-radius:8px; }
+.topnav a:hover { color:#111827; background:#eef0f3; }
+.topnav a.active { color:#2563eb; font-weight:600; background:#eff6ff; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding:22px 0 4px; }
+.mast-l { font-size:24px; font-weight:700; }
+.mast-r { font-size:12px; color:#6b7280; text-align:right; line-height:1.7; }
+.hero { margin-top:16px; background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  box-shadow:0 1px 2px rgba(16,24,40,.04); padding:24px; }
+.hero .h-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.hero h1 { font-size:28px; font-weight:700; }
+.hero p { margin-top:10px; color:#4b5563; font-size:14px; line-height:1.7; }
+.pill { display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:600; white-space:nowrap; }
+.pill.ok { background:#dcfce7; color:#15803d; }
+.pill.bad { background:#fee2e2; color:#b91c1c; }
+.pill.warn { background:#fef3c7; color:#b45309; }
+.pill.muted { background:#f3f4f6; color:#4b5563; }
+.sec { margin:32px 0 12px; font-size:12px; font-weight:600; letter-spacing:.08em; color:#6b7280; }
+.card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 1px 2px rgba(16,24,40,.04); }
+.row { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:18px 22px; }
+.row + .row { border-top:1px solid #eef0f3; }
+.r-name { font-size:16px; font-weight:600; }
+.r-sub { font-size:13px; color:#6b7280; font-weight:400; margin-left:8px; }
+.r-url { font-size:12px; color:#9ca3af; margin-top:3px; }
 .r-side { text-align:right; flex:none; }
-.r-status { font-size:14.5px; font-weight:600; display:flex; align-items:center; gap:7px; justify-content:flex-end; }
-.dot { width:8px; height:8px; border-radius:50%; background:#3d6b35; display:inline-block; }
-.dot.bad { background:#bc3f16; }
-.r-status.bad { color:#bc3f16; }
-.r-lat { font-size:11px; color:#8a8471; margin-top:5px; letter-spacing:.03em; }
-.tally { display:flex; gap:4px; justify-content:flex-end; align-items:center; }
-.tally i { width:10px; height:10px; background:#1d1a13; display:inline-block; }
-.tally i.off { background:transparent; border:1.5px solid #b9b09a; width:7px; height:7px; }
-.tally span { margin-left:9px; font-size:12.5px; color:#57523f; }
-.cols { display:grid; grid-template-columns:1fr 1fr 1.5fr; }
-.col { padding:18px 18px 2px 0; }
-.col + .col { border-left:1px solid #ddd3bc; padding-left:18px; }
-.col .k { font-size:11.5px; letter-spacing:.24em; color:#6f6a5c; }
-.col .v { font-size:21px; font-weight:700; margin-top:8px; font-variant-numeric:tabular-nums; }
-.meter { height:5px; background:#e3dbc7; margin-top:12px; position:relative; }
-.meter i { position:absolute; top:0; bottom:0; left:0; background:#1d1a13; display:block; }
-footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
-  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
-@media (max-width:560px) {
-  h1.big { font-size:38px; } .cols { grid-template-columns:1fr; }
-  .col + .col { border-left:none; padding-left:0; }
-  .stamp { width:45px; height:45px; font-size:22px; top:28px; }
-  .mast-l { font-size:24px; }
+.r-lat { font-size:12px; color:#6b7280; margin-top:5px; }
+.tally { font-size:12px; color:#4b5563; font-weight:600; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.stat { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 1px 2px rgba(16,24,40,.04); padding:20px 22px; }
+.stat .k { font-size:12px; font-weight:600; letter-spacing:.08em; color:#6b7280; }
+.stat .v { font-size:26px; font-weight:700; margin-top:8px; font-variant-numeric:tabular-nums; }
+.bar { height:6px; background:#e5e7eb; border-radius:999px; margin-top:12px; overflow:hidden; }
+.bar i { display:block; height:100%; background:#2563eb; border-radius:999px; }
+.prog { padding:4px 22px 16px; }
+.prog-item { padding:14px 0; border-top:1px solid #eef0f3; }
+.prog-item:first-child { border-top:none; }
+.prog-top { display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
+.prog-name { font-size:15px; font-weight:600; }
+.prog-num { font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.prog-num small { font-size:12px; color:#6b7280; font-weight:400; }
+.prog-detail { margin-top:6px; font-size:13px; color:#4b5563; }
+.prog-more { display:block; margin-top:14px; font-size:13px; color:#2563eb; text-decoration:none; }
+footer { margin-top:36px; padding-top:14px; border-top:1px solid #e5e7eb;
+  font-size:12px; color:#9ca3af; display:flex; justify-content:space-between; }
+footer a { color:#6b7280; }
+@media (max-width:640px) {
+  .stats { grid-template-columns:repeat(3,1fr); gap:10px; }
+  .stat { padding:14px; } .stat .v { font-size:20px; }
+  .mast-l { font-size:20px; } .hero h1 { font-size:23px; }
+  .row { padding:16px; }
 }
+@media (max-width:560px) { .stats { grid-template-columns:1fr; } }
 """
 
 
@@ -170,11 +178,8 @@ def r2_list(env):
 
 
 def tally_html(n):
-    filled = min(n, 4)
-    squares = "".join("<i></i>" for _ in range(filled)) + \
-              "".join('<i class="off"></i>' for _ in range(max(0, 4 - filled)))
-    label = f"{CN_NUM[n - 1]}代存档" if 1 <= n <= 9 else f"{n} 代存档"
-    return f'<div class="tally">{squares}<span>{label}</span></div>'
+    label = f"{n} 代存档" if n >= 1 else "无存档"
+    return f'<div class="tally">{label}</div>'
 
 
 def backup_row(env):
@@ -182,16 +187,16 @@ def backup_row(env):
         objects = r2_list(env)
     except Exception as e:
         return False, (
-            '<div class="row"><div><div class="r-name serif">异地备份'
+            '<div class="row"><div><div class="r-name">异地备份'
             '<span class="r-sub">Cloudflare R2</span></div>'
             f'<div class="r-url mono">读不到备份桶 · {html.escape(type(e).__name__)}</div></div>'
-            '<div class="r-side"><div class="r-status bad"><span class="dot bad"></span>异常</div></div></div>')
+            '<div class="r-side"><span class="pill bad">异常</span></div></div>')
     if not objects:
         return False, (
-            '<div class="row"><div><div class="r-name serif">异地备份'
+            '<div class="row"><div><div class="r-name">异地备份'
             '<span class="r-sub">Cloudflare R2</span></div>'
             '<div class="r-url mono">备份桶是空的</div></div>'
-            '<div class="r-side"><div class="r-status bad"><span class="dot bad"></span>无备份</div></div></div>')
+            '<div class="r-side"><span class="pill bad">无备份</span></div></div>')
     gens = {}
     for key, size, lastmod in objects:
         gen = key.split("/", 1)[0]
@@ -203,7 +208,7 @@ def backup_row(env):
     g = gens[newest]
     last_utc = g["last"].replace("T", " ").split(".")[0]
     return True, (
-        '<div class="row"><div><div class="r-name serif">异地备份'
+        '<div class="row"><div><div class="r-name">异地备份'
         '<span class="r-sub">Cloudflare R2</span></div>'
         f'<div class="r-url mono">最近一代 {html.escape(newest)} · {g["n"]} 个文件 · '
         f'{g["bytes"] / 1e6:.0f} MB · 上传于 {html.escape(last_utc)} UTC</div></div>'
@@ -232,6 +237,57 @@ def host_stats():
     return uptime, load, disk
 
 
+def nav_html(active):
+    links = [
+        ("https://doctor.ipv64.de", "服务状态", "doctor"),
+        ("https://student.ipv64.de", "产能看板", "student"),
+        ("https://teacher.ipv64.de", "文档公报", "teacher"),
+    ]
+    out = []
+    for url, label, key in links:
+        cls = ' class="active"' if key == active else ""
+        out.append(f'<a href="{url}"{cls}>{label}</a>')
+    return '<nav class="topnav">' + "".join(out) + "</nav>"
+
+
+def load_progress():
+    """Progress data: static/progress.json in the deployed image first,
+    sandbox copy as a local-dev fallback. Missing file -> empty groups."""
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "progress.json")
+    for path in (here, "/home/hatch/workspace/student/progress.json"):
+        try:
+            with open(path) as f:
+                return json.load(f)
+        except Exception:
+            continue
+    return {"in_progress": [], "done": [], "upcoming": []}
+
+
+def progress_compact_html(p):
+    items = p.get("in_progress", [])[:4]
+    rows = []
+    for it in items:
+        done, total = it.get("done"), it.get("total")
+        if done is not None and total:
+            pct = done / total * 100
+            num = f'{done} <small>/ {total}</small>'
+            bar = f'<div class="bar"><i style="width:{pct:.0f}%"></i></div>'
+        else:
+            num = '<span class="pill muted">进行中</span>'
+            bar = ""
+        rows.append(
+            f'<div class="prog-item"><div class="prog-top">'
+            f'<div class="prog-name">{html.escape(it["name"])}</div>'
+            f'<div class="prog-num">{num}</div></div>{bar}'
+            f'<div class="prog-detail">{html.escape(it.get("detail", ""))}</div></div>')
+    if not rows:
+        return ""
+    return ('<div class="sec">任务进度</div><div class="card"><div class="prog">'
+            + "".join(rows) +
+            '<a class="prog-more" href="https://student.ipv64.de">完整进度见产能看板 →</a>'
+            '</div></div>')
+
+
 def render():
     env = load_env()
     now_dt = datetime.now()
@@ -245,13 +301,13 @@ def render():
         all_ok = all_ok and ok
         host = url.replace("https://", "").rstrip("/")
         if ok:
-            status = '<div class="r-status"><span class="dot"></span>正常</div>'
+            status = '<span class="pill ok">正常</span>'
             lat = f'<div class="r-lat mono">响应 {secs:.2f} 秒 · HTTP {code}</div>'
         else:
-            status = '<div class="r-status bad"><span class="dot bad"></span>异常</div>'
+            status = '<span class="pill bad">异常</span>'
             lat = f'<div class="r-lat mono">HTTP {code or "无响应"}</div>'
         rows.append(
-            f'<div class="row"><div><div class="r-name serif">{html.escape(name)}'
+            f'<div class="row"><div><div class="r-name">{html.escape(name)}'
             f'<span class="r-sub">{html.escape(sub)}</span></div>'
             f'<div class="r-url mono">{html.escape(host)}</div></div>'
             f'<div class="r-side">{status}{lat}</div></div>')
@@ -261,45 +317,46 @@ def render():
     if disk:
         free_gb, total_gb, used_pct = disk
         disk_v = f"剩余 {free_gb:.1f} / {total_gb:.0f} GB"
-        disk_bar = f'<div class="meter"><i style="width:{used_pct:.0f}%"></i></div>'
+        disk_bar = f'<div class="bar"><i style="width:{used_pct:.0f}%"></i></div>'
     else:
         disk_v, disk_bar = "未知", ""
-    stamp = "安" if all_ok else "恙"
     big = "一切正常" if all_ok else "有服务异常"
-    lede = ("三站巡检无碍，备份按期存档。本页独立刊印于 Cloady，主服务器有恙时照常出刊。" if all_ok
+    pill = '<span class="pill ok">全部正常</span>' if all_ok else '<span class="pill bad">有异常</span>'
+    lede = ("三站巡检无碍，备份按期存档。本页由 Cloady 托管，主服务器有恙时照常更新。" if all_ok
             else "部分服务出现异常，详情见下表。")
+    progress = progress_compact_html(load_progress())
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="refresh" content="300">
-<title>服务公报 · doctor.ipv64.de</title>
+<title>服务状态 · doctor.ipv64.de</title>
 <style>{CSS}</style>
 </head>
 <body>
-<div class="sheet">
+<div class="wrap">
+  {nav_html("doctor")}
   <header class="mast">
-    <div class="mast-l serif">服务公报</div>
+    <div class="mast-l">服务状态</div>
     <div class="mast-r mono">DOCTOR.IPV64.DE<br>{date_line}</div>
   </header>
-  <div class="rule-double"></div>
-  <section class="headline">
-    <div class="stamp serif">{stamp}</div>
-    <h1 class="big serif">{big}</h1>
-    <p class="lede">{lede}</p>
+  <section class="hero">
+    <div class="h-top"><h1>{big}</h1>{pill}</div>
+    <p>{lede}</p>
   </section>
-  <h2 class="sec">网站服务<span class="sec-r mono">SERVICES</span></h2>
-  {''.join(rows)}
-  <h2 class="sec">数据备份<span class="sec-r mono">ARCHIVE</span></h2>
-  {b_row}
-  <h2 class="sec">本页主机<span class="sec-r mono">CLOADY</span></h2>
-  <div class="cols">
-    <div class="col"><div class="k">运行时间</div><div class="v serif">{html.escape(uptime)}</div></div>
-    <div class="col"><div class="k">系统负载</div><div class="v serif">{html.escape(load)}</div></div>
-    <div class="col"><div class="k">磁盘空间</div><div class="v serif">{html.escape(disk_v)}</div>{disk_bar}</div>
+  <div class="sec">网站服务</div>
+  <div class="card">{''.join(rows)}</div>
+  <div class="sec">数据备份</div>
+  <div class="card">{b_row}</div>
+  <div class="sec">本页主机</div>
+  <div class="stats">
+    <div class="stat"><div class="k">运行时间</div><div class="v">{html.escape(uptime)}</div></div>
+    <div class="stat"><div class="k">系统负载</div><div class="v">{html.escape(load)}</div></div>
+    <div class="stat"><div class="k">磁盘空间</div><div class="v">{html.escape(disk_v)}</div>{disk_bar}</div>
   </div>
-  <footer class="mono"><span>DOCTOR.IPV64.DE · 刊印于 CLOADY</span><span>每五分钟刊印一次 · 本期 {now}</span></footer>
+  {progress}
+  <footer class="mono"><span>ipv64-sites · Cloady</span><span>每五分钟更新一次 · 本期 {now}</span></footer>
 </div>
 </body>
 </html>
