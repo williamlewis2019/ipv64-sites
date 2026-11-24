@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supabase Free Has No Backups — Here&#x27;s the Free Way to Add Them · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>教程 · 2026-11-13</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">Supabase Free Has No Backups — Here&#x27;s the Free Way to Add Them</h1>
+    <div class="a-meta mono">2026-11-13 · 五个坑总览 · Backup Kit 系列首篇 · <a href="https://dev.to/william_lao_0c017fe1ee6cb/supabase-free-has-no-backups-heres-the-free-way-to-add-them-2f9d">原文首发</a></div>
+    <p>If your side project lives on a Supabase Free project, here is the uncomfortable fact: <strong>there are no automated backups.</strong> None. If you drop the wrong table tonight, there is no restore button waiting for you in the dashboard tomorrow. The fix Supabase sells you is the Pro plan at $25/month — mostly, for a lot of us, just to get daily backups retained for 7 days.</p>
+<p>The DIY fix looks trivial: run <code>pg_dump</code> from a GitHub Actions cron job, upload the result somewhere cheap. It <em>is</em> about 30 lines of YAML. But those 30 lines hide five traps, and every one of them fails <em>quietly</em> — you find out your backup doesn't work on the one day you actually need it.</p>
+<p>I hit all five while building my own setup. Here they are, in the order you'll meet them.</p>
+<h2>Trap 1: The connection string Supabase shows you first breaks <code>pg_dump</code></h2>
+<p>In the dashboard (Settings → Database → Connection string), the prominent option is the <strong>transaction pooler on port 6543</strong>. <code>pg_dump</code> cannot run through it — it needs a real session, and through the transaction pooler the dump fails or hangs with errors that point nowhere near the real cause.</p>
+<p>Use the <strong>session pooler</strong> instead: port <strong>5432</strong>, host <code>aws-0-&lt;region&gt;.pooler.supabase.com</code>. Same panel, different tab. This one line is the difference between a working backup and a week of debugging.</p>
+<h2>Trap 2: The "direct connection" is IPv6-only, and GitHub runners are not</h2>
+<p>The other string in the dashboard, <code>db.&lt;your-ref&gt;.supabase.co</code>, looks like the obvious choice for a dump. On the Free plan that host is <strong>IPv6-only</strong>. GitHub-hosted runners are IPv4-only. The result is a connection error that looks exactly like a firewall or credentials problem — it is neither. (This is also why the same string works fine from your laptop on an IPv6 network and fails in CI.)</p>
+<p>Session pooler, port 5432. Again. Traps 1 and 2 are the same lesson: the two connection strings Supabase offers first are the two that don't work.</p>
+<h2>Trap 3: Your <code>pg_dump</code> is older than the server</h2>
+<p>Supabase runs <strong>PostgreSQL 17</strong>. The <code>ubuntu-latest</code> GitHub runner ships a PostgreSQL client that tops out at <strong>16</strong> — and <code>pg_dump</code> flatly refuses to dump a server newer than itself:</p>
+<pre><code>pg_dump: error: server version mismatch
+</code></pre>
+<p><code>postgresql-client-17</code> isn't in Ubuntu's default repos, so the fix is to add PostgreSQL's official PGDG apt repository first, then install the 17 client. Three extra lines in the workflow — once you know you need them.</p>
+<h2>Trap 4: GitHub silently disables scheduled workflows in public repos</h2>
+<p>This is the nastiest one because nothing ever errors. If your backup repo is <strong>public</strong> and sees no activity for 60 days, GitHub <strong>disables scheduled workflows</strong> — quietly. No failed run, no red X, just backups that stop happening while you believe you're covered.</p>
+<p>Put the backup workflow in a <strong>private repo</strong>. (You want this anyway: the repo holds your database connection string as a secret and your backup config.)</p>
+<h2>Trap 5: Daily backups blow straight through the Free egress cap</h2>
+<p>Every dump pulls your entire database <em>out</em> of Supabase, and the Free plan includes <strong>5 GB/month of egress</strong>. The math is unforgiving:</p>
+<ul>
+<li>500 MB database, dumped <strong>weekly</strong> → ~2 GB/month. Fine.</li>
+<li>500 MB database, dumped <strong>daily</strong> → ~15 GB/month. Over the cap.</li>
+</ul>
+<p>Weekly is the sweet spot on Free. And double-check your cron while you're at it: <code>42 3 * * 0</code> is weekly (Sundays 03:42 UTC); drop the trailing <code>0</code> and <code>42 3 * * *</code> quietly becomes <em>daily</em> — trap 5, self-inflicted.</p>
+<p><strong>One honest scope note:</strong> <code>pg_dump</code> covers your database, <strong>including <code>auth.users</code></strong> (they live in the database). It does <strong>not</strong> cover Storage files — those live in S3, not Postgres, and need a separate approach. Anyone who tells you their pg_dump setup protects "everything" hasn't checked.</p>
+<h2>The free version: the smallest thing that actually works</h2>
+<p>Once you know the five traps, the working minimum fits in one workflow:</p>
+<ol>
+<li>GitHub Actions cron, weekly, in a <strong>private</strong> repo</li>
+<li>Install <code>postgresql-client-17</code> from the PGDG repo</li>
+<li><code>pg_dump</code> over the <strong>session pooler (5432)</strong>, custom format</li>
+<li>Upload to a <strong>Cloudflare R2</strong> bucket (10 GB free tier, zero egress fees)</li>
+</ol>
+<p>I packaged exactly this as a free lite version — script, workflow, and a 10-minute setup guide:</p>
+<p><strong>→ <a href="https://github.com/liulewis/supabase-free-backup-lite">supabase-free-backup-lite on GitHub</a></strong></p>
+<p>It is deliberately minimal: the dump is uploaded <strong>unencrypted</strong>, there is no validation that the dump is restorable, and if a run fails, nobody tells you. For a hobby project, that's a fair trade. For a project with real users, those three gaps are exactly where backups go to die — which is why I built the full kit.</p>
+<h2>The full kit: encryption, proof it restores, and a watchdog</h2>
+<p>The <a href="https://franklinlewis7.gumroad.com/l/jispyu">Supabase Free-Tier Backup Kit</a> is the same weekly workflow with the failure modes engineered out:</p>
+<ul>
+<li><strong>GPG AES-256 encryption</strong> before upload — a leaked R2 credential no longer means a leaked database</li>
+<li><strong>Pre-flight validator</strong> that rejects the 6543 pooler and the IPv6-only host <em>before</em> the run, with an error that names the actual fix, and checks your <code>pg_dump</code> version against the server</li>
+<li><strong>Validation on every dump</strong>: SHA-256 checksum plus <code>pg_restore --list</code>, so a truncated or corrupt dump gets caught the week it's made, not the day you need it</li>
+<li><strong>A restore drill and step-by-step runbook</strong> (English + Chinese): spin up a throwaway Postgres, restore into it, prove it works — because a backup you have never restored is a hope, not a backup</li>
+<li><strong>Failure alerts</strong> via webhook (Slack / Discord), a <strong>watchdog</strong> bonus workflow that notices if the backup job never runs, and a Healthchecks.io heartbeat</li>
+<li><strong>An egress calculator</strong> for the 5 GB/month cap, and <strong>90-day R2 retention</strong> rules (server-side, so CI never holds delete permissions)</li>
+</ul>
+<p>It's <strong>$29 one-time for the first 50 buyers, then $39</strong> — no subscription, and a <strong>14-day money-back guarantee</strong>. Current version is v1.0.7. For scale: Pro is $25 <em>every month</em>. The kit pays for itself in five weeks, and the lite version above stays free forever if money is the blocker.</p>
+<h2>The one-sentence version</h2>
+<p>Supabase Free gives you a great database and zero safety net; a weekly <code>pg_dump</code> to R2 closes the hole for $0 — as long as you dodge the pooler, the IPv6 host, the version mismatch, the public-repo kill switch, and the egress cap.</p>
+<p>Start with the <a href="https://github.com/liulewis/supabase-free-backup-lite">free lite version</a> today. The worst backup strategy is the one you were meaning to set up next week.</p>
+<p><em>Disclosure: I'm the author of both the lite version and the kit. Everything in the free version is genuinely free and fully functional — the kit exists for the encryption, validation, and restore proof.</em></p>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>

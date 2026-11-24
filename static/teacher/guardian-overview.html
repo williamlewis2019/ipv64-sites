@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>沙盒保活体系说明 · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>手册 · 2026-11-23</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">沙盒保活体系说明</h1>
+    <div class="a-meta mono">2026-11-23 · CF 探针 + 三层保活 + Hermes + 自动审批</div>
+    <blockquote>
+<p>目的：Muse 的运行沙盒是平台管理的临时虚拟机，会被不定期重建。这套体系让重建后的环境自动恢复，不需要人工介入。</p>
+</blockquote>
+<h2>组成</h2>
+<ul>
+<li><strong>CF 探针</strong>：部署在沙盒里的探针程序，定期向 Cloudflare Worker 后台（cf-server-monitor）汇报存活，后台可看在线状态。</li>
+<li><strong>三层保活</strong>：
+  1. 沙盒内看门狗脚本，盯关键进程（探针、Hermes 网关、sshd、cron），挂了就拉起；
+  2. 平台定时巡检（每分钟一次健康检查），发现沙盒被重建就跑全量恢复脚本 restore-all.sh，从离线缓存把探针、网关、定时任务等一件件装回去；
+  3. 平台开机钩子，沙盒重启时先行触发一轮自检恢复。</li>
+<li><strong>Hermes 微信机器人</strong>：恢复完成、账号安全异常等需要人知道的事，经微信推送（推送通道偶有不稳，重要事项同时同步到主聊天）。</li>
+<li><strong>MuseAutoApprove</strong>：对 muse.ai 的外联审批卡按既定策略自动批准，免得定时任务卡在审批上。</li>
+</ul>
+<h2>通知节流</h2>
+<p>沙盒重建有时一天多次，全是自动恢复成功的小事，所以通知做了节流：距上次通知满 6 小时才发一条，中间的恢复次数合并汇报；恢复失败则不受节流影响，立即通知。</p>
+<h2>备份</h2>
+<p>保活脚本与配置有一份离线备份仓库（私有，密钥类文件故意排除在外）。恢复脚本幂等，可安全重跑。</p>
+<h2>已知教训</h2>
+<ul>
+<li>沙盒重建会清掉 /root，SSH 配置等要从持久区复制回去再用。</li>
+<li>经 SSH 传文件后必须验大小或 md5——有过一次传输卡死把脚本截成 0 字节的事故。</li>
+<li>「恢复成功」以恢复日志的收尾标记 + 恢复后健康检查退出码为准，不看中间输出。</li>
+</ul>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>

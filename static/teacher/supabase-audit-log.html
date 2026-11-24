@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>supa_audit is archived. Here&#x27;s a maintained audit log for Supabase. · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>教程 · 2026-11-14</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">supa_audit is archived. Here&#x27;s a maintained audit log for Supabase.</h1>
+    <div class="a-meta mono">2026-11-14 · Audit Log Kit 预售文 · 触发器审计日志 · <a href="https://dev.to/william_lao_0c017fe1ee6cb/supaaudit-is-archived-heres-a-maintained-audit-log-for-supabase-42bc">原文首发</a></div>
+    <h2>"Who deleted this row?"</h2>
+<p>If you run a Supabase app, you will hear this question. A customer says their order vanished. A teammate swears they didn't touch the pricing table. You open the Dashboard and find… nothing. There is no record of who changed what.</p>
+<p>Supabase has three kinds of "audit" built in, and none of them answers the question:</p>
+<ul>
+<li><strong>pgAudit</strong> logs <em>which SQL ran</em>. It does not store the old and new values of the row.</li>
+<li><strong>Auth Audit Logs</strong> record logins and sign-ups. Not data changes.</li>
+<li><strong>Platform Audit Logs</strong> record Dashboard actions. Not app data changes.</li>
+</ul>
+<p>The tool that used to fill this gap was <code>supa_audit</code>, Supabase's own trigger-based audit extension. As of November 2026, its GitHub page says <strong>Public archive</strong> — 670 stars, 45 forks, no maintenance. The README also warns against enabling it on tables above ~3k ops/sec, and it never had an actor field, restore, retention, or a UI.</p>
+<p>So I built the smallest correct replacement, and put it on GitHub for free.</p>
+<h2>The Lite version (free, MIT)</h2>
+<p><strong>Repo:</strong> https://github.com/liulewis/supabase-audit-log-lite</p>
+<p>It is a trigger-based audit log, about 150 lines of SQL:</p>
+<ul>
+<li><code>audit.audit_log</code> — one row per INSERT / UPDATE / DELETE, with old/new values as JSONB, the acting user's <code>auth.uid()</code>, and a timestamp.</li>
+<li>It lives in its own <code>audit</code> schema, so the Data API never exposes it.</li>
+<li>RLS is on, authenticated users get <code>SELECT</code> only. There is deliberately no write policy, so the log is append-only through the API.</li>
+<li>Two query views: history of one row, and activity of one person.</li>
+</ul>
+<p>Setup is three steps in the SQL Editor:</p>
+<pre><code class="language-sql">-- 1. run sql/01_audit_schema.sql, then sql/02_views.sql
+-- 2. turn auditing on for the tables you care about
+select audit.enable_tracking('public.customers');
+select audit.enable_tracking('public.orders');
+
+-- 3. &quot;who deleted this row?&quot;
+select changed_at, operation, actor_id, old_data, new_data
+from audit.v_row_history
+where table_name = 'customers' and record_id = '42'
+order by changed_at desc;
+</code></pre>
+<p>There is a demo script (<code>sql/03_demo.sql</code>) that inserts, updates and deletes a throwaway row so you can see the three audit entries appear.</p>
+<h2>What Lite honestly does NOT do</h2>
+<p>I would rather list the gaps than have you discover them:</p>
+<ul>
+<li><strong>No field-level diff.</strong> Lite stores the full old/new row.</li>
+<li><strong>No single-row restore.</strong> Restoring a deleted row correctly — foreign keys, unique keys, concurrency — is the hardest part and is not in Lite.</li>
+<li><strong>No retention management.</strong> The log only grows. Watch your 500 MB free-tier database.</li>
+<li><strong>No tamper-resistance depth.</strong> Lite relies on RLS + no write policy. No <code>BEFORE UPDATE/DELETE</code> guards, no <code>TRUNCATE</code> protection.</li>
+<li><strong>No admin UI.</strong> You query with SQL.</li>
+<li><strong>No actor for background writes.</strong> <code>actor_id</code> is <code>auth.uid()</code> for changes through PostgREST. Writes from <code>service_role</code>, Edge Functions, cron or direct SQL record <code>NULL</code>.</li>
+<li><strong>TRUNCATE is not captured.</strong> Row-level triggers don't fire on it.</li>
+</ul>
+<h2>The full kit (presale)</h2>
+<p>I am building the full version as a one-time template — diff views, single-row restore, retention governance, tamper-resistance depth, the admin UI, and actor context for background jobs. Presale is <strong>$29</strong> (launch price, then $39):</p>
+<p><strong>Presale:</strong> https://franklinlewis7.gumroad.com/l/audit-log-kit</p>
+<h2>What I need from you</h2>
+<p>This is a validation post as much as a launch post. If you have ever needed an audit trail on Supabase, tell me:</p>
+<ol>
+<li>What was the scenario — compliance, customer support, debugging, or showing history to your own users?</li>
+<li>How many writes per second do your audited tables see?</li>
+<li>Would you pay $29 once for diff + restore + retention + UI, or is the free Lite enough?</li>
+</ol>
+<p>Try the Lite, star the repo if it helps, and leave a comment. If enough people need the full version, I will build it. If not, the Lite stays free and I will say so.</p>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>

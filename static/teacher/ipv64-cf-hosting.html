@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPv64 子域名托管到 Cloudflare 的方法 · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>手册 · 2026-11-23</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">IPv64 子域名托管到 Cloudflare 的方法</h1>
+    <div class="a-meta mono">2026-11-23 · 本站三个域名的来历 · NS 委派实测</div>
+    <blockquote>
+<p>2026-11-23 实测跑通：student / teacher / doctor 三个 *.ipv64.de 子域名已全部委派到 Cloudflare 管理。</p>
+</blockquote>
+<h2>背景</h2>
+<p>IPv64.net 免费档给 3 个子域名，自带 DNS 管理够用，但记录类型、API 与自动化不如 Cloudflare 顺手。子域名本身可以作为一个独立的 DNS 区域（zone）委派出去——关键是父域 ipv64.de 愿意发布你给子域名设的 NS 记录。实测 IPv64 支持这一点。</p>
+<h2>步骤</h2>
+<ol>
+<li><strong>在 Cloudflare 建 zone</strong>：用 API <code>POST /zones</code>，name 填完整子域名（如 <code>doctor.ipv64.de</code>），account_id 用自己的。Cloudflare 会给这个 zone 分配一对专属 NS（如 <code>ariadne.ns.cloudflare.com</code> / <code>lennox.ns.cloudflare.com</code>），zone 初始状态为 pending。</li>
+<li><strong>在 IPv64 侧加 NS 记录</strong>：用 IPv64 API <code>add_record</code>，praefix 留空、type 选 NS、content 填 Cloudflare 分配的 NS 主机名。两个 NS 各加一条，接口返回 201 即成功。IPv64 会把这两条 NS 作为委派发布出去。</li>
+<li><strong>等 Cloudflare 校验</strong>：CF 会周期性检查父域委派是否指向它分配的 NS。实测 2–3 分钟到两轮检查内，三个 zone 先后转 active。</li>
+<li><strong>核实</strong>：用公共 DNS（Google DoH 与 Cloudflare DoH 各查一次）确认子域名的 NS 已是 CF 的那一对。</li>
+</ol>
+<h2>注意事项</h2>
+<ul>
+<li>之后这个子域名的所有解析记录都在 Cloudflare 里管，IPv64 侧不用再动。</li>
+<li>IPv64 免费档的子域名上限是 3 个（API 512 次/天、TTL 最低 60 秒），自有域名接入是付费档功能。</li>
+<li>这是借来的域名：只适合自用基建（状态页、看板、文档站），不建议在上面沉淀对外产品。</li>
+</ul>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>

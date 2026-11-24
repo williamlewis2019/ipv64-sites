@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>服务器异地备份与恢复演练说明 · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>手册 · 2026-11-23</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">服务器异地备份与恢复演练说明</h1>
+    <div class="a-meta mono">2026-11-23 · R2 方案定版 · 每周备份 + 每月恢复演练</div>
+    <blockquote>
+<p>适用对象：托管 Agricalc 与 PlayVizo 的自管服务器（111.91.17.248）。
+方案定版于 2026-11-23：备份到 Cloudflare R2 免费档，每月做一次恢复演练。</p>
+</blockquote>
+<h2>为什么是 R2</h2>
+<p>异地备份先后试过三个落点：</p>
+<ul>
+<li><strong>hubu.cloud</strong>：WebDAV 实测假写入——上传返回 201，随后下载 404、配额恒为 0。东西根本没存住，淘汰。</li>
+<li><strong>ct8.pl</strong>：2026-11-16 提交申请，官方称 24 小时开通，4 天后激活邮件仍未到，淘汰（日后若开通，可作第二备份位）。</li>
+<li><strong>Cloudflare R2</strong>：免费档 10 GB 存储、出站免费。单代备份约 267 MB，保留 4 代约 1.1 GB，完全装得下。最终选用。</li>
+</ul>
+<h2>备份内容（每一代的快照集）</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+<th>约大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agricalc-web.tar.gz</td>
+<td>/var/www/agri-tool（不含 .git）</td>
+<td>83 MB</td>
+</tr>
+<tr>
+<td>playvizo-web.tar.gz</td>
+<td>/var/www/playvizo（不含可再生媒体与缓存）</td>
+<td>184 MB</td>
+</tr>
+<tr>
+<td>playvizo-db.sql.gz</td>
+<td>MariaDB <code>arcade</code> 库的 mysqldump</td>
+<td>11 MB</td>
+</tr>
+<tr>
+<td>configs.tar.gz</td>
+<td>/etc/caddy</td>
+<td>9 KB</td>
+</tr>
+</tbody>
+</table>
+<h2>运行方式</h2>
+<ul>
+<li>脚本：服务器 <code>/root/scripts/r2-backup.sh</code>，凭据只在服务器 <code>/root/.r2-backup.env</code>（600 权限）。</li>
+<li>定时：每周日 04:15（服务器 crontab），日志 <code>/var/log/r2-backup.log</code>。</li>
+<li>每次上传后用远端清单逐个核对文件名与大小，全部对上才算成功；保留最新 4 代，旧代自动清理。</li>
+</ul>
+<h2>恢复演练（每月）</h2>
+<p>备份没验证过能恢复，等于没有备份。演练脚本 <code>/root/scripts/restore-drill.sh</code>，每月 1 日 05:30 自动运行，全程隔离：</p>
+<ol>
+<li>从 R2 下载最新一代到隔离目录；</li>
+<li>检查四个文件齐全；</li>
+<li>解开两个网站包，核对文件数与首页存在；</li>
+<li>把数据库导入临时库 <code>restore_drill</code>，核对表数与博客行数，随后删库；</li>
+<li>检查配置包内含 Caddyfile；</li>
+<li>结论写入 <code>/root/restore-drill/result.json</code>，并展示在 student.ipv64.de 产能看板上。</li>
+</ol>
+<p>首期演练（2026-11-23）：六项全过，用时 72 秒——Agricalc 解出 1,377 个文件，PlayVizo 15,708 个，数据库 24 张表、138 篇博客。</p>
+<h2>真出事时的恢复步骤</h2>
+<ol>
+<li>用 rclone 把目标那一代从 R2 拉回服务器；</li>
+<li><code>tar -xzf agricalc-web.tar.gz -C /var/www</code>、<code>tar -xzf playvizo-web.tar.gz -C /var/www</code>（注意权限：目录 755、文件 644，Caddy 才读得了）；</li>
+<li><code>zcat playvizo-db.sql.gz | mysql arcade</code> 导回数据库；</li>
+<li>从 configs.tar.gz 恢复 /etc/caddy，<code>caddy validate</code> 后 reload；</li>
+<li>逐站 curl 验证 200。</li>
+</ol>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>

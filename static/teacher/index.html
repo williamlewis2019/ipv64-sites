@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文档公报 · teacher.ipv64.de</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif">文档公报</div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>2026年11月23日 · 星期一</div>
+  </header>
+  <div class="rule-double"></div>
+  <section class="headline">
+    <h1 class="big serif">文章与手册的老家</h1>
+    <p class="lede">发在各平台的教程、自己系统的运行手册、做事的计划，都在这里存一份原件。平台是分发，这里是归档。</p>
+  </section>
+  <div class="search"><input id="q" type="search" placeholder="搜标题或关键词…" autocomplete="off"></div>
+  <h2 class="sec">教程<span class="sec-r mono">TUTORIALS</span></h2><a class="doc" href="/supabase-backup-overview.html" data-text="supabase free has no backups — here&#x27;s the free way to add them 五个坑总览 · backup kit 系列首篇"><div class="d-top"><div class="d-title serif">Supabase Free Has No Backups — Here&#x27;s the Free Way to Add Them</div><div class="d-date mono">2026-11-13</div></div><div class="d-note">五个坑总览 · Backup Kit 系列首篇</div></a><a class="doc" href="/supabase-pooler-5432.html" data-text="why pg_dump fails on supabase&#x27;s transaction pooler — use the session pooler (5432) 坑一 · transaction pooler 跑不了 pg_dump"><div class="d-top"><div class="d-title serif">Why pg_dump Fails on Supabase&#x27;s Transaction Pooler — Use the Session Pooler (5432)</div><div class="d-date mono">2026-11-17</div></div><div class="d-note">坑一 · transaction pooler 跑不了 pg_dump</div></a><a class="doc" href="/supabase-pg17-client.html" data-text="server version mismatch: pg_dump vs postgresql 17, and how to fix it in ci 坑三 · supabase 是 pg 17，ci 客户端也要 17"><div class="d-top"><div class="d-title serif">Server Version Mismatch: pg_dump vs PostgreSQL 17, and How to Fix It in CI</div><div class="d-date mono">2026-11-19</div></div><div class="d-note">坑三 · Supabase 是 PG 17，CI 客户端也要 17</div></a><a class="doc" href="/supabase-audit-log.html" data-text="supa_audit is archived. here&#x27;s a maintained audit log for supabase. audit log kit 预售文 · 触发器审计日志"><div class="d-top"><div class="d-title serif">supa_audit is archived. Here&#x27;s a maintained audit log for Supabase.</div><div class="d-date mono">2026-11-14</div></div><div class="d-note">Audit Log Kit 预售文 · 触发器审计日志</div></a><h2 class="sec">手册<span class="sec-r mono">HANDBOOKS</span></h2><a class="doc" href="/r2-backup-guide.html" data-text="服务器异地备份与恢复演练说明 r2 方案定版 · 每周备份 + 每月恢复演练"><div class="d-top"><div class="d-title serif">服务器异地备份与恢复演练说明</div><div class="d-date mono">2026-11-23</div></div><div class="d-note">R2 方案定版 · 每周备份 + 每月恢复演练</div></a><a class="doc" href="/ipv64-cf-hosting.html" data-text="ipv64 子域名托管到 cloudflare 的方法 本站三个域名的来历 · ns 委派实测"><div class="d-top"><div class="d-title serif">IPv64 子域名托管到 Cloudflare 的方法</div><div class="d-date mono">2026-11-23</div></div><div class="d-note">本站三个域名的来历 · NS 委派实测</div></a><a class="doc" href="/guardian-overview.html" data-text="沙盒保活体系说明 cf 探针 + 三层保活 + hermes + 自动审批"><div class="d-top"><div class="d-title serif">沙盒保活体系说明</div><div class="d-date mono">2026-11-23</div></div><div class="d-note">CF 探针 + 三层保活 + Hermes + 自动审批</div></a><a class="doc" href="/flux-pipeline.html" data-text="agricalc 出图管线（定版说明） 新内容缺图用 flux 出图 + 逐张质检，存量图不动"><div class="d-top"><div class="d-title serif">Agricalc 出图管线（定版说明）</div><div class="d-date mono">2026-11-19</div></div><div class="d-note">新内容缺图用 FLUX 出图 + 逐张质检，存量图不动</div></a><a class="doc" href="/backup-planner.html" data-text="supabase backup planner 引流工具 免费在线规划器 → backup kit 的漏斗落点"><div class="d-top"><div class="d-title serif">Supabase Backup Planner 引流工具</div><div class="d-date mono">2026-11-19</div></div><div class="d-note">免费在线规划器 → Backup Kit 的漏斗落点</div></a><h2 class="sec">计划<span class="sec-r mono">PLANS</span></h2><a class="doc" href="/content-plan.html" data-text="内容分发计划 四周八篇 · dev.to 首发、hashnode 转载、各论坛口径"><div class="d-top"><div class="d-title serif">内容分发计划</div><div class="d-date mono">2026-11-17</div></div><div class="d-note">四周八篇 · dev.to 首发、Hashnode 转载、各论坛口径</div></a>
+  <div class="empty" id="empty">没有找到匹配的文档。</div>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span>共 10 篇 · 持续归档中</span></footer>
+</div>
+<script>
+var q = document.getElementById('q');
+q.addEventListener('input', function () {
+  var needle = q.value.trim().toLowerCase(), any = false;
+  document.querySelectorAll('.doc').forEach(function (el) {
+    var hit = !needle || el.getAttribute('data-text').indexOf(needle) >= 0;
+    el.style.display = hit ? '' : 'none';
+    if (hit) any = true;
+  });
+  document.getElementById('empty').style.display = any ? 'none' : 'block';
+});
+</script>
+</body>
+</html>

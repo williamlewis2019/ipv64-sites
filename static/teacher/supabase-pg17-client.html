@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server Version Mismatch: pg_dump vs PostgreSQL 17, and How to Fix It in CI · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>教程 · 2026-11-19</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">Server Version Mismatch: pg_dump vs PostgreSQL 17, and How to Fix It in CI</h1>
+    <div class="a-meta mono">2026-11-19 · 坑三 · Supabase 是 PG 17，CI 客户端也要 17 · <a href="https://dev.to/william_lao_0c017fe1ee6cb/server-version-mismatch-pgdump-vs-postgresql-17-and-how-to-fix-it-in-ci-o6j">原文首发</a></div>
+    <p>Here's an error that stops a lot of first-time Supabase backup setups cold:</p>
+<pre><code>pg_dump: error: server version mismatch
+pg_dump: detail: server version: 17.x, pg_dump version: 16.x
+</code></pre>
+<p>No dump is produced. The good news: this one is honest about what's wrong, and the fix takes about three lines. The annoying part is <em>where</em> the fix has to go.</p>
+<h2>Why pg_dump refuses</h2>
+<p><code>pg_dump</code> has a hard rule: it will not dump a server that is <strong>newer than itself</strong>. This isn't pedantry. A dump has to describe everything in the database — system catalogs, object types, syntax — and an older client can't be trusted to understand a newer server's internals. Rather than produce a subtly wrong backup, it refuses outright.</p>
+<p>The mismatch is easy to walk into right now:</p>
+<ul>
+<li><strong>Supabase runs PostgreSQL 17.</strong></li>
+<li><strong>GitHub-hosted runners (<code>ubuntu-latest</code>) ship a PostgreSQL client that tops out at 16</strong> from Ubuntu's default repositories. The same is true of a lot of local installs — Debian and Ubuntu stable lag the server world by a version or two.</li>
+</ul>
+<p>So the most common setup — Supabase project, GitHub Actions cron, <code>pg_dump</code> — hits this on the very first run, before any of the subtler backup traps get a chance.</p>
+<h2>Check your versions first</h2>
+<p>Before changing anything, confirm which side is which:</p>
+<pre><code class="language-bash"># Your client
+pg_dump --version
+
+# The server (run against your Supabase connection string)
+psql &quot;$SUPABASE_DB_URL&quot; -t -c &quot;SHOW server_version;&quot;
+</code></pre>
+<p>If the client's major version is lower than the server's, that's your whole problem. (Client <em>newer</em> than server is fine — <code>pg_dump</code> 17 will happily dump a 15 or 16 server.)</p>
+<h2>The fix in GitHub Actions: install the 17 client from PGDG</h2>
+<p><code>postgresql-client-17</code> isn't in Ubuntu's default repos, so a plain <code>apt-get install</code> can't find it. You add PostgreSQL's official apt repository (PGDG) first:</p>
+<pre><code class="language-yaml">- name: Install PostgreSQL 17 client
+  run: |
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+      | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+    . /etc/os-release
+    echo &quot;deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main&quot; \
+      | sudo tee /etc/apt/sources.list.d/pgdg.list
+    sudo apt-get update -qq
+    sudo apt-get install -y -qq postgresql-client-17
+</code></pre>
+<p>Put this step <em>before</em> your dump step, and verify what you actually got — runner images change over time, and you want the failure to be loud if the 17 client ever goes missing:</p>
+<pre><code class="language-yaml">- name: Verify pg_dump version
+  run: pg_dump --version   # must print 17.x
+</code></pre>
+<h2>The same fix locally, without touching your system install</h2>
+<p>If the mismatch is on your own machine and you don't want to upgrade your system PostgreSQL, borrow the client from the official Docker image for a one-off dump:</p>
+<pre><code class="language-bash">docker run --rm postgres:17 \
+  pg_dump &quot;postgres://postgres.&lt;ref&gt;:&lt;password&gt;@aws-0-&lt;region&gt;.pooler.supabase.com:5432/postgres&quot; \
+  --format=custom &gt; backup.dump
+</code></pre>
+<p>(The <code>postgres:17</code> image's client always matches its major version. Note the session-pooler connection string — dumping through the transaction pooler on port 6543 fails for unrelated reasons.)</p>
+<h2>Make it not come back</h2>
+<p>Version mismatches are a recurring hazard, not a one-time setup step: Supabase will eventually move to PostgreSQL 18, and runner images drift on their own schedule. Two habits keep this from silently breaking a backup pipeline later:</p>
+<ol>
+<li><strong>Pin and assert.</strong> Install the client version explicitly (as above) and assert <code>pg_dump --version</code> in the workflow. If the assertion fails, the run fails loudly — which is what you want from a backup job.</li>
+<li><strong>Fail noisily in general.</strong> A backup workflow that errors is an inconvenience; a backup workflow that silently stops is a data-loss story. Whatever you use to run dumps, make sure a failed run notifies a human.</li>
+</ol>
+<p>That's the whole trap: three lines of repository setup, discovered — like most backup lessons — at the exact moment you first rely on the thing.</p>
+<hr />
+<p><em>This is the second of five traps I hit building a weekly pg_dump → Cloudflare R2 backup for a Supabase Free project. The minimal working setup is free on GitHub as <a href="https://github.com/liulewis/supabase-free-backup-lite">supabase-free-backup-lite</a>; the hardened version — including a pre-flight check that catches this version mismatch before the run — is the <a href="https://franklinlewis7.gumroad.com/l/jispyu">Supabase Free-Tier Backup Kit</a>.</em></p>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why pg_dump Fails on Supabase&#x27;s Transaction Pooler — Use the Session Pooler (5432) · 文档公报</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f6f1e7; color:#1d1a13; padding:46px 20px 38px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+.sheet { max-width:720px; margin:0 auto; }
+.serif { font-family:Georgia,"Times New Roman","Songti SC","STSong","Noto Serif SC",serif; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.mast { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:12px; }
+.mast-l { font-size:31px; font-weight:700; letter-spacing:.16em; }
+.mast-l a { color:inherit; text-decoration:none; }
+.mast-r { font-size:10.5px; color:#6f6a5c; text-align:right; line-height:1.8; letter-spacing:.1em; }
+.rule-double { border-top:3.5px solid #1d1a13; }
+.rule-double::after { content:""; display:block; border-top:1px solid #1d1a13; margin-top:2.5px; }
+.headline { padding:34px 0 4px; }
+h1.big { font-size:40px; font-weight:700; letter-spacing:.03em; line-height:1.2; }
+.lede { margin-top:10px; color:#57523f; font-size:14.5px; line-height:1.8; }
+.search { margin:26px 0 4px; }
+.search input { width:100%; padding:11px 14px; font-size:15px; color:#1d1a13;
+  background:#fffdf6; border:1.5px solid #1d1a13; border-radius:3px; outline:none; }
+.search input::placeholder { color:#a39a80; }
+.sec { display:flex; justify-content:space-between; align-items:baseline; margin:34px 0 2px;
+  padding-bottom:7px; border-bottom:2px solid #1d1a13; font-size:15px; letter-spacing:.26em; font-weight:700; }
+.sec-r { font-size:10px; letter-spacing:.2em; color:#8a8471; font-weight:400; }
+.doc { display:block; padding:15px 2px; border-bottom:1px solid #ddd3bc; text-decoration:none; color:inherit; }
+.doc:hover .d-title { color:#bc3f16; }
+.d-top { display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+.d-title { font-size:19px; font-weight:700; line-height:1.45; transition:color .15s; }
+.d-date { font-size:11px; color:#8a8471; white-space:nowrap; }
+.d-note { margin-top:4px; font-size:12.5px; color:#6f6a5c; }
+.empty { display:none; padding:22px 2px; color:#6f6a5c; font-size:14px; }
+footer { margin-top:40px; padding-top:12px; border-top:1px solid #1d1a13;
+  font-size:10.5px; color:#8a8471; display:flex; justify-content:space-between; letter-spacing:.05em; }
+.back { display:inline-block; margin:26px 0 4px; color:#bc3f16; text-decoration:none; font-size:13.5px; }
+article { padding-top:8px; }
+article h1 { font-size:33px; line-height:1.3; margin:10px 0 6px; }
+article .a-meta { font-size:11.5px; color:#8a8471; margin-bottom:20px; letter-spacing:.05em; }
+article .a-meta a { color:#bc3f16; }
+article h2 { font-size:23px; margin:32px 0 10px; padding-bottom:6px; border-bottom:1px solid #ddd3bc; }
+article h3 { font-size:18.5px; margin:24px 0 8px; }
+article h4 { font-size:16px; margin:20px 0 6px; }
+article p { margin:11px 0; font-size:15.5px; line-height:1.95; }
+article ul, article ol { margin:11px 0; padding-left:24px; font-size:15.5px; line-height:1.95; }
+article li { margin:3px 0; }
+article a { color:#bc3f16; }
+article code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  background:#ece4cf; padding:1px 5px; border-radius:3px; }
+article pre { background:#211d15; color:#f0e9d8; padding:16px 18px; border-radius:6px;
+  overflow-x:auto; margin:14px 0; }
+article pre code { background:none; color:inherit; padding:0; font-size:13px; line-height:1.7; }
+article blockquote { border-left:3px solid #bc3f16; padding:2px 0 2px 14px; margin:14px 0; color:#57523f; }
+article table { border-collapse:collapse; margin:14px 0; font-size:14px; width:100%; }
+article th, article td { border-bottom:1px solid #ddd3bc; padding:7px 10px; text-align:left; }
+article th { border-bottom:2px solid #1d1a13; }
+article img { max-width:100%; }
+article hr { border:none; border-top:1px solid #ddd3bc; margin:22px 0; }
+@media (max-width:560px) { h1.big { font-size:29px; } article h1 { font-size:26px; } .mast-l { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="mast">
+    <div class="mast-l serif"><a href="/">文档公报</a></div>
+    <div class="mast-r mono">TEACHER.IPV64.DE<br>教程 · 2026-11-17</div>
+  </header>
+  <div class="rule-double"></div>
+  <a class="back" href="/">← 回目录</a>
+  <article>
+    <h1 class="serif">Why pg_dump Fails on Supabase&#x27;s Transaction Pooler — Use the Session Pooler (5432)</h1>
+    <div class="a-meta mono">2026-11-17 · 坑一 · transaction pooler 跑不了 pg_dump · <a href="https://dev.to/william_lao_0c017fe1ee6cb/why-pgdump-fails-on-supabases-transaction-pooler-use-the-session-pooler-5432-101c">原文首发</a></div>
+    <p>If you're setting up an automated backup for a Supabase project, the first connection string you meet is the wrong one for the job. This post explains why, and which one to use instead.</p>
+<h2>The symptom</h2>
+<p>You copy the connection string from <strong>Settings → Database</strong> in the Supabase dashboard, plug it into your backup script or CI job, and run <code>pg_dump</code>. Then one of these happens:</p>
+<ul>
+<li>The dump hangs until it times out.</li>
+<li>It dies partway through with an error that mentions prepared statements, or a setting that "does not exist", or nothing recognisable at all.</li>
+<li>It works once from your laptop and fails in CI, or the other way around.</li>
+</ul>
+<p>The credentials are fine. The network is fine. The port is the problem.</p>
+<h2>What's actually going on</h2>
+<p>The prominent connection option in the dashboard is the <strong>transaction pooler</strong>, on port <strong>6543</strong>. Supabase's pooler is PgBouncer, and in transaction mode it works like this: your client connects, runs a statement, and the pooler is free to hand the <em>next</em> statement to a <em>different</em> backend connection. No single server session belongs to you for the length of your connection.</p>
+<p>That's exactly what you want for a web app making thousands of short queries. It is exactly what <code>pg_dump</code> cannot tolerate. A dump is not a pile of independent statements — <code>pg_dump</code> sets session-level state, takes locks, and reads a consistent snapshot across the whole run. It expects one real PostgreSQL session, start to finish. Through the transaction pooler, that assumption breaks, and the failure mode is rarely a clean "not supported" message. It's a hang, a half-finished dump, or an error pointing at something else entirely.</p>
+<p>This is the trap: the error never says "wrong pooler mode", so people burn hours on firewalls, passwords, and SSL settings that were never the issue.</p>
+<h2>The fix: session pooler, port 5432</h2>
+<p>In the same dashboard panel (<strong>Settings → Database → Connection string</strong>), switch to the <strong>session pooler</strong>. It looks like this:</p>
+<pre><code>postgres://postgres.&lt;your-project-ref&gt;:&lt;password&gt;@aws-0-&lt;your-region&gt;.pooler.supabase.com:5432/postgres
+</code></pre>
+<p>Two details worth double-checking:</p>
+<ul>
+<li><strong>Port 5432</strong>, not 6543. Same host family, different mode.</li>
+<li><strong>The username includes your project ref</strong>: <code>postgres.&lt;your-project-ref&gt;</code>, not just <code>postgres</code>. The pooler needs the ref to route you to the right project.</li>
+</ul>
+<p>Session mode gives you a dedicated backend connection for as long as you're connected, which is precisely the session behaviour <code>pg_dump</code> assumes. As a bonus, the session pooler is reachable over IPv4, which the direct connection host (<code>db.&lt;your-ref&gt;.supabase.co</code>) is not on the Free plan — that host is IPv6-only, a separate trap if your dumps run from GitHub Actions or anywhere else without IPv6.</p>
+<h2>A minimal working dump command</h2>
+<pre><code class="language-bash">pg_dump &quot;$SUPABASE_DB_URL&quot; \
+  --format=custom \
+  --no-owner \
+  --no-privileges \
+  --file=backup-$(date +%F).dump
+</code></pre>
+<p>Custom format (<code>--format=custom</code>) is worth defaulting to: the file is compressed, and <code>pg_restore</code> can selectively restore individual tables from it later — which is what you'll want on the bad day, rather than replaying one giant SQL file.</p>
+<p>Verify the dump is real before you trust the pipeline:</p>
+<pre><code class="language-bash">pg_restore --list backup-$(date +%F).dump | head -20
+</code></pre>
+<p>If that prints your tables, the dump is structurally sound. (Actually test-restoring it into a throwaway database is the stronger check, but that's a topic of its own.)</p>
+<h2>Quick checklist</h2>
+<p>If your Supabase backup is failing and you landed here from a search:</p>
+<ol>
+<li>Are you connecting on port <strong>6543</strong>? → Switch to the session pooler on <strong>5432</strong>.</li>
+<li>Is your username <code>postgres.&lt;project-ref&gt;</code>? → Bare <code>postgres</code> won't route correctly through the pooler.</li>
+<li>Does the same string work locally but not in CI? → Check whether you're using the direct host (<code>db.&lt;ref&gt;.supabase.co</code>) in one of them; on Free it's IPv6-only.</li>
+<li>Does the dump <em>start</em> but produce a file <code>pg_restore --list</code> can't read? → It was probably interrupted mid-stream; re-run over the session pooler and compare.</li>
+</ol>
+<p>None of this is Supabase being broken. The transaction pooler is the right default for application traffic — it's just the wrong tool for a job that needs a whole session. One port number is the entire fix, but it's an expensive one to discover by debugging.</p>
+<hr />
+<p><em>I learned this (and four other traps like it) while building a weekly pg_dump → Cloudflare R2 backup for my own Free-plan project. The minimal setup is free on GitHub as <a href="https://github.com/liulewis/supabase-free-backup-lite">supabase-free-backup-lite</a>; if you want the hardened version — encryption, per-dump validation, restore drills, failure alerts — I packaged it as the <a href="https://franklinlewis7.gumroad.com/l/jispyu">Supabase Free-Tier Backup Kit</a>.</em></p>
+  </article>
+  <footer class="mono"><span>TEACHER.IPV64.DE</span><span><a href="/" style="color:#57523f">回目录</a></span></footer>
+</div>
+</body>
+</html>
