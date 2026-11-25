@@ -378,6 +378,7 @@ def refresher():
 STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 HOST_SITES = {
     "student.ipv64.de": "student",
+    "student.hidns.vip": "student",
     "teacher.ipv64.de": "teacher",
 }
 MIME = {
